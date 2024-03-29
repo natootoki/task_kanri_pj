@@ -1,0 +1,105 @@
+<div id="export">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* ページのスタイル */
+        .page {
+          display: none; /* 最初は非表示にする */
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul id="taskList"></ul>
+    </nav>
+    <input type="text" id="inputTaskName" placeholder="タスク名">
+    <button onclick='addTask(document.getElementById("inputTaskName").value);'>追加</button>
+    <h1 id="currentTask"></h1>
+    <div id="taskContent"></div>
+    <input type="text" id="fileName" placeholder="ファイル名">
+    <button id="export" onclick="downloadFile()">エクスポート</button>
+</body>
+<script>
+
+    let active_task = "";
+    // ページを表示する関数
+    function showPage(task_name) {
+        // すべてのページを非表示にする
+        var pages = document.querySelectorAll('.page');
+        pages.forEach(function(page) {
+        page.style.display = 'none';
+        });
+
+        // 指定されたページを表示する
+        var selected_task = document.getElementById(task_name);
+        if (selected_task) {
+        selected_task.style.display = 'block';
+        active_task = task_name;
+        }
+
+        document.getElementById("currentTask").textContent = document.getElementById(task_name + "Nav").textContent;
+    }
+
+    function addTask(task_name) {
+        // 新しい li 要素を作成
+        var newListItem = document.createElement("li");
+        newListItem.id = task_name + "Nav";
+
+        // 新しい a 要素を作成し、属性とイベントリスナーを設定
+        var newAnchor = document.createElement("a");
+        newAnchor.href = "#";
+        newAnchor.textContent = task_name;
+        // HTML要素にonclick属性を追加
+        newAnchor.setAttribute("onclick", "showPage('" + task_name + "'); document.getElementById('" + task_name + "').focus();");
+
+        // a 要素を li 要素の子要素として追加
+        newListItem.appendChild(newAnchor);
+
+        // idが"pages"の要素を取得
+        var task_element = document.getElementById("taskList");
+
+        // 新しい li 要素を idが"pages"の要素の下に追加
+        task_element.appendChild(newListItem);
+
+        // 新しい div 要素を作成
+        var newDiv = document.createElement("div");
+        newDiv.setAttribute("contenteditable", "true");
+        // newDiv.style.backgroundColor = "#dddddd";
+        newDiv.style.border = "1px solid black";
+        newDiv.style.padding = "5px";
+        newDiv.id = task_name;
+        newDiv.classList.add("page");
+
+        // idが"pages"の要素を取得
+        var task_element = document.getElementById("taskContent");
+
+        // 新しい div 要素を idが"pages"の要素の子要素として直接追加
+        task_element.appendChild(newDiv);
+
+        document.getElementById("inputTaskName").value = "";
+    }
+
+    let task_list = [];
+
+    function downloadFile() {
+        const html = '<div id="export">' + document.getElementById("export").innerHTML + '</div>';
+        const link = document.createElement('a');
+        let filename = document.getElementById('fileName').value;
+        if (filename == ""){
+            filename = "file";
+        }
+        const blob = new Blob([html], {type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = filename+'.html';
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+
+</script>
+</html>
+</div>
