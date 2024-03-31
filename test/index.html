@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="container">
+        <!-- ここに新しい要素が追加されます -->
+    </div>
+
+    <button onclick="addNewDiv()">Add New Div</button>
+</body>
+
+<script>
+    function addNewDiv() {
+        // 新しいdiv要素を作成
+        var newDiv = document.createElement("div");
+
+        // 新しいdiv要素にテキストを追加
+        var newText = document.createTextNode("This is a new element.");
+
+        // 新しい要素のテキストを追加
+        newDiv.appendChild(newText);
+
+        // 削除ボタンを作成
+        var deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        
+        // 削除ボタンがクリックされたときの処理を追加
+        deleteButton.onclick = function() {
+            // 親要素から新しい要素を削除
+            newDiv.parentNode.removeChild(newDiv);
+        };
+
+        // 新しい要素に削除ボタンを追加
+        newDiv.appendChild(deleteButton);
+
+        // 新しい要素を既存の要素に追加
+        document.getElementById("container").appendChild(newDiv);
+    }
+</script>
+</html>
